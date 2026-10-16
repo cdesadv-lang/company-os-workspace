@@ -12,14 +12,16 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
           persist-credentials: false
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
       - name: Pull trusted test runtime
-        run: docker pull node:24-alpine
+        run: docker pull node:24-alpine@sha256:44fce696f38ba8c987c4db89954051000bbd05ffd8d8659ba15ed4a8602e937f
       - name: Run generated tests without network or secrets
         run: >-
           docker run --rm --network none --read-only --cap-drop ALL
           --security-opt no-new-privileges --pids-limit 128 --memory 256m --cpus 1
           --user 1000:1000 --workdir /workspace -v "$PWD/src/generated:/workspace:ro"
-          node:24-alpine node --test
+          node:24-alpine@sha256:44fce696f38ba8c987c4db89954051000bbd05ffd8d8659ba15ed4a8602e937f node --test
+
