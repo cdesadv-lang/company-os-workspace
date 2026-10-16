@@ -7,4 +7,5 @@ test('rejects invalid price and quantity', () => {
   for (const [price, quantity] of [[-1, 2], [1.5, 2], [100, 0], [100, 1.2], [NaN, 2]]) assert.throws(() => quoteTotal(price, quantity), RangeError);
 });
 test('rejects integer overflow', () => assert.throws(() => quoteTotal(Number.MAX_SAFE_INTEGER, 2), RangeError));
+test('does not coerce string inputs', () => assert.throws(() => quoteTotal('1250', 3), RangeError));
 
